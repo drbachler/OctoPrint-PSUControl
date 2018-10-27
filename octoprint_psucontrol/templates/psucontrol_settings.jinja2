@@ -108,6 +108,15 @@
             </select>
         </div>
     </div>
+    <div class="control-group">
+        <label class="control-label">Check PSU State Wait</label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" min="0" class="input-mini text-right" data-bind="value: settings.plugins.psucontrol.checkPSUStateEventWait">
+                <span class="add-on">sec</span>
+            </div>
+        </div>
+    </div>
     <!-- ko if: settings.plugins.psucontrol.sensingMethod() === "GPIO" -->
     <div class="control-group">
         <label class="control-label">Sensing GPIO Pin</label>

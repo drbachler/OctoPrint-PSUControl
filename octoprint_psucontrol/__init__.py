@@ -106,6 +106,7 @@ class PSUControl(octoprint.plugin.StartupPlugin,
         self.idleIgnoreCommands = ''
         self._idleIgnoreCommandsArray = []
         self.idleTimeoutWaitTemp = 0
+        self.checkPSUStateEventWait = 5
         self.disconnectOnPowerOff = False
         self.sensingMethod = ''
         self.senseGPIOPin = 0
@@ -203,6 +204,9 @@ class PSUControl(octoprint.plugin.StartupPlugin,
 
         self.idleTimeoutWaitTemp = self._settings.get_int(["idleTimeoutWaitTemp"])
         self._logger.debug("idleTimeoutWaitTemp: %s" % self.idleTimeoutWaitTemp)
+
+        self.checkPSUStateEventWait = self._settings.get_int(["checkPSUStateEventWait"])
+        self._logger.debug("checkPSUStateEventWait: %s" % self.checkPSUStateEventWait)
 
         if self.switchingMethod == 'GCODE':
             self._logger.info("Using G-Code Commands for On/Off")
@@ -373,7 +377,8 @@ class PSUControl(octoprint.plugin.StartupPlugin,
 
             self._plugin_manager.send_plugin_message(self._identifier, dict(hasGPIO=self._hasGPIO, isPSUOn=self.isPSUOn))
 
-            self._check_psu_state_event.wait(5)
+            self._logger.debug("checkPSUStateEventWait: {}".format(self._settings.checkPSUStateEventWait))
+            self._check_psu_state_event.wait(self._settings.checkPSUStateEventWait)
             self._check_psu_state_event.clear()
 
     def _start_idle_timer(self):
